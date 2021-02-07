@@ -195,15 +195,18 @@ void decode(CodecState* state, u8* input, int numSamples, s16* output)
     bufferstep = 0;
     
 	/*jmarti856: Create debug file*/
-	std::ofstream outfile("debug.txt");
+	FILE* fPtr;
 
-    for ( ; numSamples > 0 ; numSamples-- )
+	fPtr = fopen("debug.txt", "w");
+
+	for (; numSamples > 0; numSamples--)
 	{
 		/* Step 1 - get the delta value */
-		if ( bufferstep ) 
+		if (bufferstep)
 		{
 			delta = inputbuffer & 0xf;
-		} else
+		}
+		else
 		{
 			inputbuffer = *inp++;
 			delta = (inputbuffer >> 4) & 0xf;
@@ -212,8 +215,8 @@ void decode(CodecState* state, u8* input, int numSamples, s16* output)
 
 		/* Step 2 - Find new index value (for later) */
 		index += indexTable[delta];
-		if ( index < 0 ) index = 0;
-		if ( index > 88 ) index = 88;
+		if (index < 0) index = 0;
+		if (index > 88) index = 88;
 
 		/* Step 3 - Separate sign and magnitude */
 		sign = delta & 8;
@@ -225,20 +228,20 @@ void decode(CodecState* state, u8* input, int numSamples, s16* output)
 		** in adpcm_coder.
 		*/
 		vpdiff = step >> 3;
-		if ( delta & 4 ) vpdiff += step;
-		if ( delta & 2 ) vpdiff += step>>1;
-		if ( delta & 1 ) vpdiff += step>>2;
+		if (delta & 4) vpdiff += step;
+		if (delta & 2) vpdiff += step >> 1;
+		if (delta & 1) vpdiff += step >> 2;
 
-		if ( sign )
-		  valpred -= vpdiff;
+		if (sign)
+			valpred -= vpdiff;
 		else
-		  valpred += vpdiff;
+			valpred += vpdiff;
 
 		/* Step 5 - clamp output value */
-		if ( valpred > 32767 )
-		  valpred = 32767;
-		else if ( valpred < -32768 )
-		  valpred = -32768;
+		if (valpred > 32767)
+			valpred = 32767;
+		else if (valpred < -32768)
+			valpred = -32768;
 
 		/* Step 6 - Update step value */
 		step = stepsizeTable[index];
@@ -250,9 +253,17 @@ void decode(CodecState* state, u8* input, int numSamples, s16* output)
 		EngineXStates = (((valpred & 0xffff) << 16) | ((inputbuffer & 0xff) << 8) | ((bufferstep & 0x1) << 7) | ((index & 0x7f) << 0));
 
 		/*jmarti856: Write to debug file*/
-		outfile << EngineXStates << std::endl;
+		if (fPtr != NULL)
+		{
+			fprintf(fPtr, "%x\n", EngineXStates);
+		}
     }
-	outfile.close();
+
+	/* Close file to save file data */
+	if (fPtr != NULL)
+	{
+		fclose(fPtr);
+	}
 
     state->valprev = valpred;
     state->index = index;
