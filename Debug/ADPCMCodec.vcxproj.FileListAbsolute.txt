@@ -1,0 +1,2 @@
+F:\Repositories\enginex-ima-states\Debug\ADPCMCodec.exe
+F:\Repositories\enginex-ima-states\Debug\ADPCMCodec.pdb
