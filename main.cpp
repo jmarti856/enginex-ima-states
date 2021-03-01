@@ -1,4 +1,4 @@
-
+﻿
 // Example program for encoding/decoding .WAV <-> .ADPCM
 //
 
@@ -97,9 +97,8 @@ bool encode(char* inFileName, char* outFileName)
 
 	u8* adpcmData = (u8*) malloc(numSamples / 2);
 
-	CodecState state;
-	memset(&state, 0, sizeof(state));
-	encode(&state, samples, numSamples, adpcmData);
+	/* swy: here's the meaty part ¯\_(ツ)_/¯ */
+	CodecState state = {0}; encode(&state, samples, numSamples, adpcmData);
 
 	FILE* outputFile = fopen(outFileName, "wb");
 	fwrite(adpcmData, 1, numSamples / 2, outputFile);
@@ -117,6 +116,7 @@ bool decode(char* inFileName, char* outFileName)
 
 	fseek(f, 0, SEEK_END);
 	int inFileSize = ftell(f);
+
 	fseek(f, 0, SEEK_SET);
 	u8* inFileBuf = (u8*) malloc(inFileSize);
 
@@ -154,9 +154,8 @@ bool decode(char* inFileName, char* outFileName)
 	endianWriteU32Big(&dataHeader->DataId, DATA_ID);
 	endianWriteU32Little(&dataHeader->ChunkSize, numSamples * 2);
 	
-	CodecState state;
-	memset(&state, 0, sizeof(state));
-	decode(&state, inFileBuf, numSamples, (s16*) (dataHeader + 1));
+	/* swy: here's the meaty part ¯\_(ツ)_/¯ */
+	CodecState state = {0}; decode(&state, inFileBuf, numSamples, (s16*) (dataHeader + 1));
 
 	FILE* outputFile = fopen(outFileName, "wb");
 
