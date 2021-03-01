@@ -13,5 +13,4 @@ struct CodecState
 void encode(CodecState* state, s16* input, int numSamples, u8* output);
 void decode(CodecState* state, u8* input, int numSamples, s16* output);
 
-
 #endif

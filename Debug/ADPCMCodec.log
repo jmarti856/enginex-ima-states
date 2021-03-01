@@ -1,7 +1,7 @@
 ﻿cl : línea de comandos warning D9035: La opción 'Gm' está desusada y se quitará en próximas versiones
   main.cpp
   codec.cpp
-F:\Repositories\enginex-ima-states\codec.cpp(200,9): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+F:\Repositories\enginex-ima-states\codec.cpp(197,9): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   Generando código...
 codec.obj : warning LNK4075: se omite '/EDITANDCONTINUE' debido a la especificación '/SAFESEH'
   ADPCMCodec.vcxproj -> F:\Repositories\enginex-ima-states\Debug\ADPCMCodec.exe

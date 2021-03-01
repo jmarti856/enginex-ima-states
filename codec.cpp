@@ -1,8 +1,3 @@
-
-// This file contains both the standard Intel/DVI/IMA ADPCM encoder & decoder,
-// as well as a transformed C version that lends itself well to running on 68000
-
-
 /***********************************************************
 Copyright 1992 by Stichting Mathematisch Centrum, Amsterdam, The
 Netherlands.
@@ -190,6 +185,8 @@ void decode(CodecState* state, u8* input, int numSamples, s16* output)
 
     valpred = state->valprev;
     index = state->index;
+
+
     step = stepsizeTable[index];
 
     bufferstep = 0;
@@ -255,7 +252,11 @@ void decode(CodecState* state, u8* input, int numSamples, s16* output)
 		/*jmarti856: Write to debug file*/
 		if (fPtr != NULL)
 		{
-			fprintf(fPtr, "%x\n", EngineXStates);
+			fprintf(fPtr, "valpred: %d ", valpred);
+			fprintf(fPtr, "inputbuffer: %d ", inputbuffer);
+			fprintf(fPtr, "bufferstep: %d ", bufferstep);
+			fprintf(fPtr, "index: %d ", index);
+			fprintf(fPtr, "EngineXStates: %x\n", EngineXStates);
 		}
     }
 

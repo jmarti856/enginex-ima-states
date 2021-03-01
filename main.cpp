@@ -45,9 +45,6 @@ typedef struct DATAHeaderTag
 	u32	ChunkSize;
 } DATAHeader;
 
-
-
-
 bool encode(char* inFileName, char* outFileName)
 {
 	FILE* f = fopen(inFileName, "rb");
@@ -150,6 +147,7 @@ bool decode(char* inFileName, char* outFileName)
 	memset(&state, 0, sizeof(state));
 	decode(&state, inFileBuf, numSamples, (s16*) (dataHeader + 1));
 
+	//Write Wav
 	FILE* outputFile = fopen(outFileName, "wb");
 	fwrite(outFileBuf, 1, outBufferSize, outputFile);
 	fclose(outputFile);
