@@ -50,7 +50,7 @@ OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 
-#include <stdio.h>
+#include <cstdio>
 #include "codec.h"
 #include <fstream>
 
@@ -184,6 +184,7 @@ void decode(CodecState* state, u8* input, int numSamples, s16* output)
     int inputbuffer;		/* place to keep next 4-bit value */
     int bufferstep;		/* toggle between inputbuffer/input */
 	s32 EngineXStates;	/*StateA and B for EngineX*/
+	s32 SState = 0;
 
     outp = output;
     inp = input;
@@ -249,13 +250,26 @@ void decode(CodecState* state, u8* input, int numSamples, s16* output)
 		/* Step 7 - Output value */
 		*outp++ = valpred;
 
-		/*jmarti856: Calculate States*/
+		/* swy: this is what i derived in the wiki, seems like it doesn't actually match */
 		EngineXStates = (((valpred & 0xffff) << 16) | ((inputbuffer & 0xff) << 8) | ((bufferstep & 0x1) << 7) | ((index & 0x7f) << 0));
+
+		/* swy: this is how these fields are actually packed */
+		struct state_type { s32 valpred : 16, inputbuffer : 8, index : 7, bufferstep : 1; } s;
+
+		s.valpred     = valpred;
+		s.index       = index;
+		s.bufferstep  = bufferstep;
+		s.inputbuffer = inputbuffer;
+
+		SState = *(s32*)(&s);
+
+		/* swy: this seems to mirror the SState struct packing in memory, it should display the exact same thing as above */
+		u32 SSCorrectedLittleEndianBitPacking = (((valpred & 0xffff) << 0) | ((inputbuffer & 0xff) << 16) | (((bufferstep & 0x1) << 7) | ((index & 0x7f) << 0)) << 24);
 
 		/*jmarti856: Write to debug file*/
 		if (fPtr != NULL)
 		{
-			fprintf(fPtr, "%x\n", EngineXStates);
+			fprintf(fPtr, " %08x [[ valpred=%08x inputbuffer=%2x bufferstep=%01x index=%04x  // SState=%08x / corrected=%08x \n", EngineXStates, valpred, inputbuffer, bufferstep, index, SState, SSCorrectedLittleEndianBitPacking);
 		}
     }
 

@@ -111,10 +111,18 @@ bool encode(char* inFileName, char* outFileName)
 bool decode(char* inFileName, char* outFileName)
 {
 	FILE* f = fopen(inFileName, "rb");
+
+	if (!f)
+		return false;
+
 	fseek(f, 0, SEEK_END);
 	int inFileSize = ftell(f);
 	fseek(f, 0, SEEK_SET);
 	u8* inFileBuf = (u8*) malloc(inFileSize);
+
+	if (!inFileBuf)
+		return false;
+
 	fread(inFileBuf, 1, inFileSize, f);
 	fclose(f);
 
@@ -151,6 +159,10 @@ bool decode(char* inFileName, char* outFileName)
 	decode(&state, inFileBuf, numSamples, (s16*) (dataHeader + 1));
 
 	FILE* outputFile = fopen(outFileName, "wb");
+
+	if (!outputFile)
+		return false;
+
 	fwrite(outFileBuf, 1, outBufferSize, outputFile);
 	fclose(outputFile);
 
