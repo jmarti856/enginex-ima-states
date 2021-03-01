@@ -168,15 +168,15 @@ void encode(CodecState* state, s16* input, int numSamples, u8* output)
 
 void decode(CodecState* state, u8* input, int numSamples, s16* output)
 {
-    u8 *inp;		/* Input buffer pointer */
-    s16 *outp;		/* output buffer pointer */
+    u8 *inp;			/* Input buffer pointer */
+    s16 *outp;			/* output buffer pointer */
     int sign;			/* Current adpcm sign bit */
     int delta;			/* Current adpcm output value */
     int step;			/* Stepsize */
     int valpred;		/* Predicted value */
     int vpdiff;			/* Current change to valpred */
     int index;			/* Current step change index */
-    int inputbuffer;		/* place to keep next 4-bit value */
+    int inputbuffer;	/* place to keep next 4-bit value */
     int bufferstep;		/* toggle between inputbuffer/input */
 	s32 EngineXStates;	/*StateA and B for EngineX*/
 
@@ -252,10 +252,10 @@ void decode(CodecState* state, u8* input, int numSamples, s16* output)
 		/*jmarti856: Write to debug file*/
 		if (fPtr != NULL)
 		{
-			fprintf(fPtr, "valpred: %d ", valpred);
-			fprintf(fPtr, "inputbuffer: %d ", inputbuffer);
-			fprintf(fPtr, "bufferstep: %d ", bufferstep);
-			fprintf(fPtr, "index: %d ", index);
+			fprintf(fPtr, "valpred: %x ", valpred);
+			fprintf(fPtr, "inputbuffer: %x ", inputbuffer);
+			fprintf(fPtr, "bufferstep: %x ", bufferstep);
+			fprintf(fPtr, "index: %x ", index);
 			fprintf(fPtr, "EngineXStates: %x\n", EngineXStates);
 		}
     }
